@@ -1,117 +1,63 @@
 #!/usr/bin/python3
-"""This module gives solution to the N queens puzzle"""
-import sys
+"""
+nqueens backtracking program to print the coordinates of n queens
+on an nxn grid such that they are all in non-attacking positions
+"""
 
 
-def main():
+from sys import argv
 
-    if len(sys.argv) != 2:
+if __name__ == "__main__":
+    a = []
+    if len(argv) != 2:
         print("Usage: nqueens N")
         exit(1)
-
-    if not (sys.argv[1]).isdigit():
+    if argv[1].isdigit() is False:
         print("N must be a number")
         exit(1)
-
-    if int(sys.argv[1]) < 4:
+    n = int(argv[1])
+    if n < 4:
         print("N must be at least 4")
         exit(1)
 
-    size = int(sys.argv[1])
+    # initialize the answer list
+    for i in range(n):
+        a.append([i, None])
 
-    i = 1
-    while i < size - 1:
-        result = []
-        init = [0, i]
-        result.append(init)
-        test_position(size, result)
-        i += 1
+    def already_exists(y):
+        """check that a queen does not already exist in that y value"""
+        for x in range(n):
+            if y == a[x][1]:
+                return True
+        return False
 
+    def reject(x, y):
+        """determines whether or not to reject the solution"""
+        if (already_exists(y)):
+            return False
+        i = 0
+        while(i < x):
+            if abs(a[i][1] - y) == abs(i - x):
+                return False
+            i += 1
+        return True
 
-def accept(i, j, result, size):
-    """accept position if is valid
+    def clear_a(x):
+        """clears the answers from the point of failure on"""
+        for i in range(x, n):
+            a[i][1] = None
 
-    Returns: True if accepted otherwise False.
-    """
-    decision = True
-    for l in result:
-        # Test vertical and horizontal
-        if i == l[0] or j == l[1]:
-            decision = False
-        elif diagonals_check(i, j, l, size) is True:
-            decision = False
-    return decision
+    def nqueens(x):
+        """recursive backtracking function to find the solution"""
+        for y in range(n):
+            clear_a(x)
+            if reject(x, y):
+                a[x][1] = y
+                if (x == n - 1):  # accepts the solution
+                    print(a)
+                else:
+                    nqueens(x + 1)  # moves on to next x value to continue
 
-
-def diagonals_check(i, j, l, size):
-    """diagonals_check determine if position i,j is diagonal to reference value l
-
-    Args:
-        i ([type]): [description]
-        j ([type]): [description]
-        l ([type]): [description]
-    """
-    i_change = 0
-    j_change = 0
-    # Test diagonals positive values i and j
-    i_change = l[0]
-    j_change = l[1]
-    i_change += 1
-    j_change += 1
-    while i_change < size and j_change < size:
-        if i == i_change and j == j_change:
-            return True
-        i_change += 1
-        j_change += 1
-    # Test diagonals i positive values j negative values
-    i_change = l[0]
-    j_change = l[1]
-    i_change += 1
-    j_change -= 1
-    while i_change < size and j_change >= 0:
-        if i == i_change and j == j_change:
-            return True
-        i_change += 1
-        j_change -= 1
-    # Test diagonals j positive values i negative values
-    i_change = l[0]
-    j_change = l[1]
-    i_change -= 1
-    j_change += 1
-    while i_change >= 0 and j_change < size:
-        if i == i_change and j == j_change:
-            return True
-        i_change -= 1
-        j_change += 1
-    # Test diagonals both i and j negative values
-    i_change = l[0]
-    j_change = l[1]
-    i_change -= 1
-    j_change -= 1
-    while i_change >= 0 and j_change >= 0:
-        if i == i_change and j == j_change:
-            return True
-        i_change -= 1
-        j_change -= 1
-    return False
-
-
-def test_position(size, result):
-    """test_position [summary]
-
-    [extended_summary]
-    """
-    i = 0
-    # Test different positions
-    while i < size:
-        j = 0
-        while j < size:
-            if accept(i, j, result, size) is True:
-                new = [i, j]
-                result.append(new)
-                break
-            j += 1
-        i += 1
-    print(result)
-
-main()
+    # start the recursive process at x = 0
+    nqueens(0)
+    
