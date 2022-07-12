@@ -24,5 +24,4 @@
 
 
 ## Author
-* **Geoffrey Zoref** - [Gzoref](https://github.com/Gzoref)
-* **Justin Majetich** - [Gzoref](https://github.com/justinmajetich)
+* **kennedy wainaina** - [kietar](https://github.com/kietar)
