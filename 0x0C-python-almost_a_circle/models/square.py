@@ -1,76 +1,79 @@
 #!/usr/bin/python3
-'''
-Write the class Square that
-inherits from Rectangle:
-'''
+"""This module contain a subclass called Square"""
+
+
 from models.rectangle import Rectangle
 
 
 class Square(Rectangle):
-    '''
-    Square class inherits from Rectangle
-    '''
+    """Square subclass that makes an abstraction of a square
 
+    Args:
+        Base ([class]): parent class
+    """
     def __init__(self, size, x=0, y=0, id=None):
-        '''
-        Constructor
-        '''
+        """__init__ constructor method for square instance
+
+        Args:
+            size ([int]): size of square
+            x (int, optional): position in x. Defaults to 0.
+            y (int, optional): position in y. Defaults to 0.
+            id ([type], optional): id of the instance. Defaults to None.
+        """
         super().__init__(size, size, x, y, id)
-        self.size = size
+
+    def __str__(self):
+        """__str__ method that return human readable sting
+        representation of an square instance
+
+        Returns:
+            [str]: string representation a square instance
+        """
+        return "[Square] ({}) {}/{} - {}\
+".format(self.id, self.x, self.y, self.width)
 
     @property
     def size(self):
-        '''
-        size getter
-        '''
+        """size getter method to get the size of square
+
+        Returns:
+            [int]: size of the square
+        """
         return self.width
 
     @size.setter
-    def size(self, value):
-        '''
-        size setter
-        '''
-        self.width = value
-        self.height = value
+    def size(self, size):
+        """size setter method to set the width and heigth of square
+
+        Args:
+            size ([int]): set the width and height
+        """
+        self.width = size
+        self.height = size
 
     def update(self, *args, **kwargs):
-        '''
-        Makes args variadic
-        '''
-        argc = len(args)
-        if argc > 0:
-            try:
-                self.id = args[0]
-                self.size = args[1]
-                self.x = args[2]
-                self.y = args[3]
-            except BaseException:
-                pass
+        """update method that assigns an argument to each attribute"""
+
+        names = ["id", "size", "x", "y"]
+        if args is not () and args is not None:
+            for value, name in zip(args, names):
+                setattr(self, name, value)
         else:
-            if 'id' in kwargs:
-                self.id = kwargs['id']
-            if 'size' in kwargs:
-                self.size = kwargs['size']
-            if 'x' in kwargs:
-                self.x = kwargs['x']
-            if 'y' in kwargs:
-                self.y = kwargs['y']
+            for k, v in kwargs.items():
+                if hasattr(self, k):
+                    setattr(self, k, v)
 
     def to_dictionary(self):
-        '''
-       Pull the parameters out in
-       the function as a dictionary
-        '''
-        return {
-            'id': self.id,
-            'x': self.x,
-            'size': self.size,
-            'y': self.y
-        }
+        """to_dictionary method that return dictionary representation
+        of an instance
 
-    def __str__(self):
-        '''
-        String representation
-        '''
-        return '[Square] ({}) {}/{} - {}'.format(self.id,
-                                                 self.x, self.y, self.size)
+        Returns:
+            [dict]: dictionary representation
+        """
+        dic_repr = {}
+        for key, value in vars(self).items():
+            if key == "_Rectangle__width" or key == "_Rectangle__height":
+                dic_repr["size"] = value
+            else:
+                dic_repr[key.split("__")[-1]] = value
+        return dic_repr
