@@ -1,3 +1,3 @@
--- displays the max temperature of each state (ordered by State name).
-
-SELECT state, MAX(value) as max_temp FROM temperatures GROUP BY state ORDER BY state;
+-- Script that displays the average temperature (Fahrenheit) by city ordered by temperature (descending).
+-- Script that displays the average temperature (Fahrenheit) by city ordered by temperature (descending).
+SELECT state, MAX(value) AS max_temp FROM temperatures GROUP BY state ORDER BY state;
